@@ -1,9 +1,12 @@
+const express = require("express");
+const puppeteer = require("puppeteer");
+
+const app = express();
+
 app.get("/scrape", async (req, res) => {
   try {
     const browser = await puppeteer.launch({
-      executablePath: puppeteer.executablePath(),
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"], // จำเป็นสำหรับเซิร์ฟเวอร์
     });
     const page = await browser.newPage();
     await page.goto("http://182.52.47.34/#/landing", { waitUntil: "networkidle2" });
@@ -21,7 +24,9 @@ app.get("/scrape", async (req, res) => {
   } catch (error) {
     console.error("Error scraping data:", error);
     res.status(500).send("Error scraping data");
-  } finally {
-    console.log("Request completed.");
   }
 });
+
+// เปลี่ยนให้ใช้ PORT จาก process.env
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
