@@ -1,20 +1,17 @@
 const express = require("express");
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-core");
 
 const app = express();
-
-// เพิ่ม route สำหรับ "/"
-app.get("/", (req, res) => {
-  res.send("Welcome to Puppeteer API! Use /scrape to fetch data.");
-});
 
 app.get("/scrape", async (req, res) => {
   try {
     const browser = await puppeteer.launch({
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      executablePath: "/usr/bin/google-chrome-stable", // ใช้ Chrome ติดตั้งใน Render
+      headless: true,
     });
     const page = await browser.newPage();
-    await page.goto("http://182.52.47.34/#/landing", { waitUntil: "networkidle2" });
+    await page.goto("http://182.52.47.34/#/landing", { waitUntil: "domcontentloaded" });
 
     const data = await page.evaluate(() => {
       return {
@@ -27,11 +24,11 @@ app.get("/scrape", async (req, res) => {
     await browser.close();
     res.json(data);
   } catch (error) {
-    console.error("Error scraping data:", error);
+    console.error("Error scraping data:", error.message);
     res.status(500).send("Error scraping data");
   }
 });
 
 // ใช้ PORT จาก process.env
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
