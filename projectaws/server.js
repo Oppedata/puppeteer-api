@@ -3,13 +3,18 @@ const puppeteer = require("puppeteer");
 
 const app = express();
 
+// Route for root path
+app.get("/", (req, res) => {
+  res.send("Welcome to Puppeteer API! Use /scrape to get the data.");
+});
+
+// Scrape route
 app.get("/scrape", async (req, res) => {
   try {
-    // Launch Puppeteer with custom options
     const browser = await puppeteer.launch({
-      executablePath: process.env.CHROME_BIN || "/usr/bin/google-chrome-stable", // ชี้ไปยังตำแหน่ง Chrome
-      args: ["--no-sandbox", "--disable-setuid-sandbox"], // จำเป็นสำหรับ Render หรือ Docker
-      headless: true, // รันแบบ headless
+      executablePath: process.env.CHROME_BIN || "/usr/bin/google-chrome-stable",
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      headless: true,
     });
 
     const page = await browser.newPage();
