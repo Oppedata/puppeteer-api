@@ -1,12 +1,3 @@
-const express = require("express");
-const puppeteer = require("puppeteer");
-
-const app = express();
-
-app.get("/", (req, res) => {
-  res.send("Welcome to Puppeteer API! Use /scrape to get the data.");
-});
-
 app.get("/scrape", async (req, res) => {
   try {
     const browser = await puppeteer.launch({
@@ -14,9 +5,6 @@ app.get("/scrape", async (req, res) => {
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
       headless: true,
     });
-    
-    });
-
     const page = await browser.newPage();
     await page.goto("http://182.52.47.34/#/landing", { waitUntil: "networkidle2" });
 
@@ -31,10 +19,9 @@ app.get("/scrape", async (req, res) => {
     await browser.close();
     res.json(data);
   } catch (error) {
-    console.error("Error scraping data:", error.message);
-    res.status(500).send(`Error scraping data: ${error.message}`);
+    console.error("Error scraping data:", error);
+    res.status(500).send("Error scraping data");
+  } finally {
+    console.log("Request completed.");
   }
 });
-
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
