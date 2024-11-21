@@ -3,10 +3,15 @@ const puppeteer = require("puppeteer");
 
 const app = express();
 
+// เพิ่ม route สำหรับ "/"
+app.get("/", (req, res) => {
+  res.send("Welcome to Puppeteer API! Use /scrape to fetch data.");
+});
+
 app.get("/scrape", async (req, res) => {
   try {
     const browser = await puppeteer.launch({
-      args: ["--no-sandbox", "--disable-setuid-sandbox"], // จำเป็นสำหรับเซิร์ฟเวอร์
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const page = await browser.newPage();
     await page.goto("http://182.52.47.34/#/landing", { waitUntil: "networkidle2" });
@@ -27,6 +32,6 @@ app.get("/scrape", async (req, res) => {
   }
 });
 
-// เปลี่ยนให้ใช้ PORT จาก process.env
+// ใช้ PORT จาก process.env
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
