@@ -4,8 +4,9 @@
     "description": "Proxy API with Puppeteer for scraping",
     "main": "server.js",
     "scripts": {
-        "start": "node server.js"
-    },
+  "start": "npx puppeteer install && node server.js"
+}
+,
     "dependencies": {
         "express": "^4.18.2",
         "puppeteer": "^23.8.0"
