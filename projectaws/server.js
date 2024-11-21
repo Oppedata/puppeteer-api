@@ -3,16 +3,13 @@ const puppeteer = require("puppeteer");
 
 const app = express();
 
-// Route for root path
 app.get("/", (req, res) => {
   res.send("Welcome to Puppeteer API! Use /scrape to get the data.");
 });
 
-// Scrape route
 app.get("/scrape", async (req, res) => {
   try {
     const browser = await puppeteer.launch({
-      executablePath: process.env.CHROME_BIN || "/usr/bin/google-chrome-stable",
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
       headless: true,
     });
