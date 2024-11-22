@@ -1,22 +1,23 @@
 const express = require("express");
-const chromium = require("chrome-aws-lambda");
 const puppeteer = require("puppeteer-core");
+const chromium = require("chrome-aws-lambda");
 
 const app = express();
 
-// Route สำหรับ path "/"
+// Root Endpoint
 app.get("/", (req, res) => {
   res.send("Puppeteer API is running. Use /scrape to scrape data.");
 });
 
-// Route สำหรับ path "/scrape"
+// Scrape Endpoint
 app.get("/scrape", async (req, res) => {
   try {
+    // Launch Puppeteer with chrome-aws-lambda
     const browser = await puppeteer.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath: await chromium.executablePath || '/usr/bin/google-chrome-stable',
-      headless: true, // ทำงานในโหมด headless
+      headless: chromium.headless,
     });
 
     const page = await browser.newPage();
@@ -33,8 +34,8 @@ app.get("/scrape", async (req, res) => {
     await browser.close();
     res.json(data);
   } catch (error) {
-    console.error("Error scraping data:", error);
-    res.status(500).send("Error scraping data");
+    console.error("Error scraping data:", error.message);
+    res.status(500).json({ error: error.message });
   }
 });
 
