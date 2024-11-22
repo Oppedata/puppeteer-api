@@ -13,6 +13,7 @@ app.get("/scrape", async (req, res) => {
   try {
     const browser = await puppeteer.launch({
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      executablePath: "/usr/bin/google-chrome-stable",
     });
     const page = await browser.newPage();
     await page.goto("http://182.52.47.34/#/landing", { waitUntil: "networkidle2" });
