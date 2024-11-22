@@ -5,7 +5,7 @@
     "main": "server.js",
     "scripts": {
         "start": "npx puppeteer install && node server.js",
-        "build": "npx puppeteer install"
+        "build": "npm install puppeteer-core chrome-aws-lambda"
     },
     "dependencies": {
         "chrome-aws-lambda": "^10.1.0",
