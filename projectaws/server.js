@@ -1,5 +1,6 @@
 const express = require("express");
-const puppeteer = require("puppeteer");
+const chromium = require("chrome-aws-lambda");
+const puppeteer = require("puppeteer-core");
 
 const app = express();
 
@@ -12,9 +13,11 @@ app.get("/", (req, res) => {
 app.get("/scrape", async (req, res) => {
   try {
     const browser = await puppeteer.launch({
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      executablePath: puppeteer.executablePath(),
+      args: chromium.args,
+      executablePath: await chromium.executablePath || "/usr/bin/google-chrome-stable",
+      headless: chromium.headless,
     });
+
     const page = await browser.newPage();
     await page.goto("http://182.52.47.34/#/landing", { waitUntil: "networkidle2" });
 
