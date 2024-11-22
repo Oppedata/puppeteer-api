@@ -14,8 +14,9 @@ app.get("/scrape", async (req, res) => {
   try {
     const browser = await puppeteer.launch({
       args: chromium.args,
-      executablePath: await chromium.executablePath || "/usr/bin/google-chrome-stable",
-      headless: chromium.headless,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath || '/usr/bin/google-chrome-stable',
+      headless: true, // ทำงานในโหมด headless
     });
 
     const page = await browser.newPage();
