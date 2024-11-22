@@ -4,7 +4,8 @@
     "description": "Proxy API with Puppeteer for scraping",
     "main": "server.js",
     "scripts": {
-        "start": "npx puppeteer install && node server.js"
+        "start": "npx puppeteer install && node server.js",
+        "build": "echo 'No build script specified'"
     },
     "dependencies": {
         "chrome-aws-lambda": "^10.1.0",
