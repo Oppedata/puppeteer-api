@@ -11,14 +11,13 @@ app.get("/scrape", async (req, res) => {
   try {
     console.log("Launching Puppeteer...");
 
-    // เปิด Browser ด้วย Puppeteer
     const browser = await puppeteer.launch({
       args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-        '--single-process'
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--single-process"
       ],
       headless: true,
     });
@@ -43,7 +42,7 @@ app.get("/scrape", async (req, res) => {
     res.status(500).json({
       error: error.message,
       hint: "Ensure that your Puppeteer environment is configured correctly.",
-      details: error.stack, // สำหรับ debug
+      details: error.stack,
     });
   }
 });
