@@ -1,19 +1,34 @@
 const puppeteer = require("puppeteer");
 
-const app = require("express")();
+(async () => {
+  try {
+    // ติดตั้ง Chromium ถ้ายังไม่ได้ติดตั้ง
+    const browserFetcher = puppeteer.createBrowserFetcher();
+    const revisionInfo = await browserFetcher.download('1210945'); // ระบุ revision ของ Chromium
+    console.log(`Chromium installed at: ${revisionInfo.executablePath}`);
+  } catch (err) {
+    console.error("Error installing Chromium:", err.message);
+  }
+})();
+
+const express = require("express");
+const app = express();
+
+app.get("/", (req, res) => {
+  res.send("Puppeteer API is running. Use /scrape to scrape data.");
+});
 
 app.get("/scrape", async (req, res) => {
   try {
     const browser = await puppeteer.launch({
       args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-        '--single-process',
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--single-process",
       ],
-      executablePath: puppeteer.executablePath(), // ใช้ Chromium ที่ Puppeteer ติดตั้ง
-      headless: "new", // ใช้ headless mode ใหม่ของ Puppeteer
+      headless: "new",
     });
 
     const page = await browser.newPage();
