@@ -19,7 +19,8 @@ app.get("/scrape", async (req, res) => {
         "--disable-gpu",
         "--single-process",
       ],
-      headless: true, // ใช้ headless mode
+      executablePath: puppeteer.executablePath(), // ใช้ Chromium ที่ Puppeteer ติดตั้ง
+      headless: true,
     });
 
     const page = await browser.newPage();
@@ -37,7 +38,7 @@ app.get("/scrape", async (req, res) => {
     console.error("Error scraping data:", error.message);
     res.status(500).json({
       error: error.message,
-      hint: "Ensure Puppeteer is configured properly and has access to bundled Chromium.",
+      hint: "Ensure Puppeteer is configured properly and Chromium is downloaded.",
     });
   }
 });
