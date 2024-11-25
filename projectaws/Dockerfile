@@ -1,32 +1,45 @@
-FROM node:18-slim
+# เริ่มจาก Node.js base image
+FROM node:18-buster
 
-# ติดตั้ง dependencies ที่จำเป็น
+# ติดตั้ง dependencies ที่ Puppeteer ต้องการ
 RUN apt-get update && apt-get install -y \
-  wget gnupg \
-  fonts-liberation \
-  libappindicator3-1 \
-  libasound2 \
-  libatk1.0-0 \
-  libcups2 \
-  libx11-xcb1 \
-  libxcomposite1 \
-  libxrandr2 \
-  xdg-utils && \
-  wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-  sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list' && \
-  apt-get update && apt-get install -y google-chrome-stable && \
-  rm -rf /var/lib/apt/lists/*
+    wget \
+    gnupg \
+    ca-certificates \
+    fonts-liberation \
+    libappindicator3-1 \
+    libasound2 \
+    libatk1.0-0 \
+    libatspi2.0-0 \
+    libcups2 \
+    libdbus-1-3 \
+    libdrm2 \
+    libgbm1 \
+    libnspr4 \
+    libnss3 \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxrandr2 \
+    xdg-utils \
+    --no-install-recommends && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# ตั้งค่าโฟลเดอร์
-WORKDIR /usr/src/app
+# กำหนด working directory
+WORKDIR /app
 
-# คัดลอกไฟล์
-COPY package*.json ./
-RUN npm install
+# คัดลอกไฟล์ทั้งหมด
 COPY . .
 
-# เปิดพอร์ต
+# ติดตั้ง npm dependencies รวม Puppeteer
+RUN npm install
+
+# บังคับ Puppeteer ดาวน์โหลด Chromium
+RUN npx puppeteer install
+
+# เปิดพอร์ตสำหรับเซิร์ฟเวอร์
 EXPOSE 8080
 
-# เริ่มเซิร์ฟเวอร์
+# รันแอปพลิเคชัน
 CMD ["npm", "start"]

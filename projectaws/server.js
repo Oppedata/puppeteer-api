@@ -19,6 +19,7 @@ app.get("/scrape", async (req, res) => {
         "--disable-gpu",
         "--single-process",
       ],
+      executablePath: puppeteer.executablePath(), // ใช้ Path Chromium ที่ Puppeteer ติดตั้ง
       headless: true,
     });
 
@@ -37,7 +38,7 @@ app.get("/scrape", async (req, res) => {
     console.error("Error scraping data:", error.message);
     res.status(500).json({
       error: error.message,
-      hint: "Ensure Puppeteer has the necessary permissions.",
+      hint: "Ensure Puppeteer is configured properly and Chromium is downloaded.",
     });
   }
 });
