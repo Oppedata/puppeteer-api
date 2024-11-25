@@ -12,3 +12,6 @@ apt-get update && apt-get install -y \
   libxcomposite1 \
   libxrandr2 \
   xdg-utils
+
+# ตรวจสอบว่าติดตั้งสำเร็จ
+google-chrome-stable --version
