@@ -1,7 +1,6 @@
 const puppeteer = require("puppeteer");
-const express = require("express");
 
-const app = express();
+const app = require("express")();
 
 app.get("/", (req, res) => {
   res.send("Puppeteer API is running. Use /scrape to scrape data.");
@@ -19,8 +18,8 @@ app.get("/scrape", async (req, res) => {
         "--disable-gpu",
         "--single-process",
       ],
-      executablePath: puppeteer.executablePath(), // ใช้ Chromium ที่ Puppeteer ติดตั้ง
-      headless: "new", // ใช้ Headless Mode ใหม่
+      executablePath: process.env.CHROME_PATH || puppeteer.executablePath(), // ระบุ Path Chromium
+      headless: true,
     });
 
     const page = await browser.newPage();
