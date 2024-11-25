@@ -1,9 +1,11 @@
 #!/bin/bash
-
 set -e
 
 # ติดตั้ง dependencies
 npm install
 
-# บังคับ Puppeteer ให้ดาวน์โหลด Chromium
+# ติดตั้ง Puppeteer
 npx puppeteer install
+
+# ให้สิทธิ์ Puppeteer
+chmod -R 755 /usr/bin/chromium-browser

@@ -1,6 +1,6 @@
 FROM node:18-buster
 
-# ติดตั้ง dependencies สำหรับ Puppeteer
+# ติดตั้ง dependencies ที่ Puppeteer ต้องการ
 RUN apt-get update && apt-get install -y \
     wget \
     gnupg \
@@ -28,8 +28,9 @@ COPY . .
 # ติดตั้ง dependencies
 RUN npm install
 
-# ติดตั้ง Chromium ผ่าน Puppeteer
-RUN npx puppeteer install
+# ให้สิทธิ์กับ Puppeteer และ Chromium
+RUN chmod -R 755 /app
+RUN chmod -R 755 /usr/bin/chromium-browser
 
 # เปิดพอร์ต 8080
 EXPOSE 8080
