@@ -1,5 +1,5 @@
-const express = require("express");
 const puppeteer = require("puppeteer-core");
+const express = require("express");
 
 const app = express();
 
@@ -19,7 +19,7 @@ app.get("/scrape", async (req, res) => {
         "--disable-gpu",
         "--single-process",
       ],
-      executablePath: "/usr/bin/google-chrome-stable", // ใช้ Google Chrome ที่ติดตั้ง
+      executablePath: "/usr/bin/chromium-browser", // ใช้ chromium-browser แทน google-chrome-stable
       headless: true,
     });
 
@@ -38,7 +38,7 @@ app.get("/scrape", async (req, res) => {
     console.error("Error scraping data:", error.message);
     res.status(500).json({
       error: error.message,
-      hint: "Ensure Puppeteer is configured and Google Chrome is properly installed.",
+      hint: "Ensure Puppeteer is configured and Chromium is properly installed.",
     });
   }
 });
