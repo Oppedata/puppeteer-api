@@ -1,39 +1,29 @@
-const express = require("express");
 const puppeteer = require("puppeteer");
 
-const app = express();
-
-app.get("/", (req, res) => {
-  res.send("Puppeteer API is running. Use /scrape to scrape data.");
-});
+const app = require("express")();
 
 app.get("/scrape", async (req, res) => {
   try {
-    console.log("Launching Puppeteer...");
-
     const browser = await puppeteer.launch({
       args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu",
-        "--single-process"
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--single-process',
       ],
-      headless: true,
+      executablePath: puppeteer.executablePath(), // ใช้ Chromium ที่ Puppeteer ติดตั้ง
+      headless: "new", // ใช้ headless mode ใหม่ของ Puppeteer
     });
-
-    console.log("Puppeteer launched successfully!");
 
     const page = await browser.newPage();
     await page.goto("http://182.52.47.34/#/landing", { waitUntil: "networkidle2" });
 
-    const data = await page.evaluate(() => {
-      return {
-        PEA: document.querySelector(".val.val1")?.textContent.trim() || "N/A",
-        MAHIDOL: document.querySelector(".val.val2")?.textContent.trim() || "N/A",
-        SOLAR: document.querySelector(".val.val3")?.textContent.trim() || "N/A",
-      };
-    });
+    const data = await page.evaluate(() => ({
+      PEA: document.querySelector(".val.val1")?.textContent.trim() || "N/A",
+      MAHIDOL: document.querySelector(".val.val2")?.textContent.trim() || "N/A",
+      SOLAR: document.querySelector(".val.val3")?.textContent.trim() || "N/A",
+    }));
 
     await browser.close();
     res.json(data);
@@ -41,8 +31,7 @@ app.get("/scrape", async (req, res) => {
     console.error("Error scraping data:", error.message);
     res.status(500).json({
       error: error.message,
-      hint: "Ensure that your Puppeteer environment is configured correctly.",
-      details: error.stack,
+      hint: "Ensure Puppeteer is configured and Chromium is properly installed.",
     });
   }
 });

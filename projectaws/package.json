@@ -1,18 +1,14 @@
 {
-    "name": "puppeteer-proxy-api",
+    "name": "puppeteer-api",
     "version": "1.0.0",
-    "description": "Proxy API with Puppeteer for scraping",
+    "description": "Proxy API with Puppeteer",
     "main": "server.js",
     "scripts": {
-      "start": "node server.js",
-      "build": "npm install"
+      "start": "node server.js"
     },
     "dependencies": {
       "puppeteer": "^21.1.0",
       "express": "^4.21.1"
-    },
-    "engines": {
-      "node": "18.x"
     }
   }
   
