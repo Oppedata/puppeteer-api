@@ -1,33 +1,32 @@
-# Use Node.js as the base image
-FROM node:16
+FROM node:18-slim
 
-# Install Chrome dependencies
+# ติดตั้ง dependencies ที่จำเป็น
 RUN apt-get update && apt-get install -y \
-    wget \
-    gnupg \
-    --no-install-recommends && \
-    wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list' && \
-    apt-get update && apt-get install -y google-chrome-stable && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+  wget gnupg \
+  fonts-liberation \
+  libappindicator3-1 \
+  libasound2 \
+  libatk1.0-0 \
+  libcups2 \
+  libx11-xcb1 \
+  libxcomposite1 \
+  libxrandr2 \
+  xdg-utils && \
+  wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+  sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list' && \
+  apt-get update && apt-get install -y google-chrome-stable && \
+  rm -rf /var/lib/apt/lists/*
 
-# Set working directory
+# ตั้งค่าโฟลเดอร์
 WORKDIR /usr/src/app
 
-# Copy package.json and install dependencies
-COPY package.json .
+# คัดลอกไฟล์
+COPY package*.json ./
 RUN npm install
-
-# Copy application code
 COPY . .
 
-# Set environment variables for Puppeteer
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
-
-# Expose the application port
+# เปิดพอร์ต
 EXPOSE 8080
 
-# Start the application
+# เริ่มเซิร์ฟเวอร์
 CMD ["npm", "start"]
