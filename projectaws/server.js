@@ -1,6 +1,5 @@
 const express = require("express");
-const puppeteer = require("puppeteer-core");
-const chromium = require("chrome-aws-lambda");
+const puppeteer = require("puppeteer");
 
 const app = express();
 
@@ -12,23 +11,16 @@ app.get("/scrape", async (req, res) => {
   try {
     console.log("Launching Puppeteer...");
 
-    // กำหนด path ของ Chromium หรือ Google Chrome
-    const executablePath = chromium.executablePath || '/usr/bin/google-chrome-stable' || '/usr/bin/chromium-browser';
-    console.log("Chromium executable path:", executablePath);
-
+    // เปิด Browser ด้วย Puppeteer
     const browser = await puppeteer.launch({
       args: [
-        ...chromium.args,
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu",
-        "--single-process"
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--single-process'
       ],
-      defaultViewport: chromium.defaultViewport,
-      executablePath,
       headless: true,
-      ignoreHTTPSErrors: true,
     });
 
     console.log("Puppeteer launched successfully!");
@@ -51,7 +43,7 @@ app.get("/scrape", async (req, res) => {
     res.status(500).json({
       error: error.message,
       hint: "Ensure that your Puppeteer environment is configured correctly.",
-      details: error.stack, // สำหรับการ debug
+      details: error.stack, // สำหรับ debug
     });
   }
 });
