@@ -1,7 +1,6 @@
-# ใช้ Node.js base image
 FROM node:18-buster
 
-# ติดตั้ง dependencies พื้นฐาน
+# Install Chromium dependencies
 RUN apt-get update && apt-get install -y \
     wget \
     gnupg \
@@ -19,17 +18,20 @@ RUN apt-get update && apt-get install -y \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# กำหนด working directory
+# Set Puppeteer to skip Chromium download
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
+# Clean cache and remove lock files
 WORKDIR /app
+RUN rm -rf package-lock.json node_modules
+RUN npm cache clean --force
 
-# Copy ไฟล์โค้ดทั้งหมด
+# Install Puppeteer
+RUN npm install puppeteer --unsafe-perm=true --allow-root --force
+
+# Copy project files
 COPY . .
-
-# ติดตั้ง Puppeteer พร้อม dependencies
-RUN npm install puppeteer --unsafe-perm=true --allow-root
-
-# ติดตั้ง dependencies ของโปรเจกต์
 RUN npm install
 
-# เปิดใช้งานแอป
+# Start the application
 CMD ["npm", "start"]
