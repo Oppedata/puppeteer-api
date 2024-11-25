@@ -1,32 +1,35 @@
-# Use the base Node.js image
+# ใช้ Node.js base image
 FROM node:18-buster
 
-# Update and install dependencies for Puppeteer and Chromium
+# ติดตั้ง dependencies พื้นฐาน
 RUN apt-get update && apt-get install -y \
     wget \
     gnupg \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    ca-certificates \
+    fonts-liberation \
+    libappindicator3-1 \
+    libnss3 \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxcursor1 \
+    libxdamage1 \
+    libxrandr2 \
+    xdg-utils \
+    --no-install-recommends && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install Chromium manually
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' \
-    && apt-get update && apt-get install -y google-chrome-stable \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# Set up the app directory
+# กำหนด working directory
 WORKDIR /app
 
-# Copy project files
+# Copy ไฟล์โค้ดทั้งหมด
 COPY . .
 
-# Install dependencies
+# ติดตั้ง Puppeteer พร้อม dependencies
+RUN npm install puppeteer --unsafe-perm=true --allow-root
+
+# ติดตั้ง dependencies ของโปรเจกต์
 RUN npm install
 
-# Add permissions for Puppeteer and Chromium
-RUN chmod -R 755 /app
-RUN chmod -R 755 /usr/bin/google-chrome-stable
-
-# Start the app
+# เปิดใช้งานแอป
 CMD ["npm", "start"]
