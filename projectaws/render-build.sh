@@ -1,13 +1,9 @@
 #!/bin/bash
 
-# อัปเดตระบบ
-echo "Updating system..."
-apt-get update && apt-get install -y wget gnupg
+set -e
 
-# ติดตั้ง Puppeteer
-echo "Installing Puppeteer..."
-npm install puppeteer
+# ติดตั้ง dependencies
+npm install
 
-# ดาวน์โหลด Chromium
-echo "Downloading Chromium..."
+# บังคับ Puppeteer ให้ดาวน์โหลด Chromium
 npx puppeteer install
