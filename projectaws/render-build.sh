@@ -1,11 +1,13 @@
 #!/bin/bash
 set -e
 
-# ติดตั้ง dependencies
+# Install dependencies
+echo "Installing dependencies..."
 npm install
 
-# ติดตั้ง Puppeteer
-npx puppeteer install
+# Install Puppeteer and set up Chromium
+echo "Installing Puppeteer..."
+npx puppeteer install || echo "Puppeteer installation failed"
 
-# ให้สิทธิ์ Puppeteer
-chmod -R 755 /usr/bin/chromium-browser
+# Add permissions for Puppeteer
+chmod -R 755 /usr/bin/google-chrome-stable

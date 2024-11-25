@@ -1,39 +1,32 @@
+# Use the base Node.js image
 FROM node:18-buster
 
-# ติดตั้ง dependencies ที่ Puppeteer ต้องการ
+# Update and install dependencies for Puppeteer and Chromium
 RUN apt-get update && apt-get install -y \
     wget \
     gnupg \
-    ca-certificates \
-    fonts-liberation \
-    libatk1.0-0 \
-    libatk-bridge2.0-0 \
-    libcups2 \
-    libx11-xcb1 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxrandr2 \
-    libgbm1 \
-    xdg-utils \
-    --no-install-recommends && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# ตั้งค่า working directory
+# Install Chromium manually
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' \
+    && apt-get update && apt-get install -y google-chrome-stable \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up the app directory
 WORKDIR /app
 
-# คัดลอกไฟล์ทั้งหมดไปยัง container
+# Copy project files
 COPY . .
 
-# ติดตั้ง dependencies
+# Install dependencies
 RUN npm install
 
-# ให้สิทธิ์กับ Puppeteer และ Chromium
+# Add permissions for Puppeteer and Chromium
 RUN chmod -R 755 /app
-RUN chmod -R 755 /usr/bin/chromium-browser
+RUN chmod -R 755 /usr/bin/google-chrome-stable
 
-# เปิดพอร์ต 8080
-EXPOSE 8080
-
-# เริ่มต้นแอปพลิเคชัน
+# Start the app
 CMD ["npm", "start"]
