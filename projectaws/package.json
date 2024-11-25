@@ -4,12 +4,13 @@
     "description": "Proxy API with Puppeteer for scraping",
     "main": "server.js",
     "scripts": {
-        "start": "npx puppeteer install && node server.js",
+        "start": "node server.js",  // เพิ่มคำสั่ง start ที่นี่
         "build": "npm install puppeteer-core chrome-aws-lambda"
     },
     "dependencies": {
         "chrome-aws-lambda": "^10.1.0",
         "express": "^4.21.1",
+        "puppeteer": "^21.1.0",
         "puppeteer-core": "^10.4.0"
     },
     "engines": {
